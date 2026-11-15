@@ -1,4 +1,5 @@
 from tkinter import *
+from random import randint
 
 root= Tk()
 root.geometry("500x500")
@@ -7,42 +8,67 @@ root.grid_columnconfigure(0, weight=1)
 
 #Difficulty Menu
 def displayMenu():
+   
     headingLabel = Label(
         root,
         text="Math Quiz",
-        font= ("Roboto, 22")
+        font=("Roboto", 22)
     )
-    headingLabel.grid(row=0, column=0, pady=20)     
+    headingLabel.grid(row=0, column=0, pady=20)
 
-difficultyLabel = Label(
-    root,
-    text="Select Difficulty",
-    font= ("Roboto, 16")
-)
-difficultyLabel.grid(row=1, column=0, pady=10)
+    difficultyLabel = Label(
+        root,
+        text="Select Difficulty",
+        font= ("Roboto", 16)
+    )
+    difficultyLabel.grid(row=1, column=0, pady=10)
 
-easyButton = Button(
-    root,
-    text="Easy",
-    font= ("Roboto, 14"),
-    width=15,)
-easyButton.grid(row=2, column=0, pady=5)
+    easyButton = Button(
+        root,
+        text="Easy",
+        font= ("Roboto", 14),
+        width=15,
+        )
+    easyButton.grid(row=2, column=0, pady=5)
 
-moderateButton = Button(
-    root,
-    text="Moderate",
-    font= ("Roboto, 14"),
-    width=15,)
-moderateButton.grid(row=3, column=0, pady=5)
+    moderateButton = Button(
+        root,
+        text="Moderate",
+        font= ("Roboto", 14),
+        width=15,
+        )
+    moderateButton.grid(row=3, column=0, pady=5)
 
-advancedButton = Button(
-    root,
-    text="Advanced",
-    font= ("Roboto, 14"),
-    width=15,)
-advancedButton.grid(row=4, column=0, pady=5)
+    advancedButton = Button(
+        root,
+        text="Advanced",
+        font= ("Roboto", 14),
+        width=15,
+        )
+    advancedButton.grid(row=4, column=0, pady=5)
 
+#Random Number Generator
+def randomInt(difficulty):
+    if difficulty == "Easy":
+        number = randint(1, 9)
+    elif difficulty == "Moderate":
+        number = randint(10, 99)
+    elif difficulty == "Advanced":
+        number = randint(1000, 9999)
+    
+    return number
+
+# Decide Operation
+def decideOperation():
+    operation = randint(1,2)
+    
+    if operation == 1:
+        return "+"
+    elif operation == 2:
+        return "-"  
+    
+    
 
 
 displayMenu()
-root.mainloop()    
+root.mainloop()   
