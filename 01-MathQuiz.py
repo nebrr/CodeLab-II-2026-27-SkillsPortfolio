@@ -14,7 +14,9 @@ number2 = randint(1, 20)
 
 
 question = str(number1) + " + " + str(number2)
+question = str(number1) + " * " + str(number2)
 answer = number1 + number2
+answer = number1 * number2
 
 def checkAnswer():
     if answer == int(givenAnswer.get()):
@@ -25,15 +27,19 @@ def checkAnswer():
 givenAnswer = StringVar()
     
 
-# GUI
-questionLabel= Label(root, text=question, font=("Roboto", 14))
-questionLabel.grid(row=1, column=0,)
+# Menu Frame
+menuFrame = Frame(root)
+menuFrame.grid(row=0, column=0)
 
-answerentry = Entry(root, textvariable=givenAnswer, font=("Roboto", 14))
-answerentry.grid(row=2, column=0, pady=10)
+headingLabel = Label1(
+    menuFrame, text="Math Quiz", font=("Roboto", 22)
+)
+headingLabel.grid(row=0, column=0, pady=20)
 
-submitButton = Button(root, text="Submit", font=("Roboto", 14), command=checkAnswer)
-submitButton.grid(row=3, column=0, pady=20,)
+difficultyLabel = Label1(
+    menuFrame, text="Select Difficulty Level", font=("Roboto", 16)
+)
+difficultyLabel.grid(row=1, column=0, pady=10)
 
 print(question)
 print(answer)
