@@ -1,5 +1,7 @@
 from tkinter import *
 from random import randint
+score = 0
+attempts = 0
 
 
 root= Tk()
@@ -7,6 +9,7 @@ root.geometry("500x500")
 root.title("Math Quiz")
 root.grid_columnconfigure(0, weight=1)
 root['bg']='beige'
+
 # Frames Switching
 menuFrame = Frame(root, bg = "beige")
 menuFrame.grid(row=0, column=0, sticky="nsew")
@@ -62,7 +65,6 @@ def displayMenu():
         )
     advancedButton.grid(row=4, column=0, pady=5)
 
-    
 def startQuiz(difficulty):
     menuFrame.lower()
     quizFrame.tkraise()
@@ -92,7 +94,7 @@ def displayProblem (difficulty):
     number1 = randomInt(difficulty)
     number2 = randomInt(difficulty)
     operation = decideOperation()
-    
+        
     if operation == "+":
         correctAnswer = number1 + number2
     elif operation == "-":
@@ -104,40 +106,60 @@ def displayProblem (difficulty):
         font=("Roboto", 22) 
     )
     questionLabel.grid(row=5, column=2, pady=20)
-
-answerEntry = Entry(
-    quizFrame,
-    font=("Roboto", 16),
-    width=10
-)
-answerEntry.grid(row=6, column=0, pady=10)
-
-submitButton = Button(
-    quizFrame,
-    text="Submit",
-    font=("Roboto", 14),
-    width=15,
-    command=lambda: isCorrect(int(answerEntry.get()), correctAnswer)
-)
-submitButton.grid(row=7, column=0, pady=5)
-
-
-
-def isCorrect(userAnswer, correctAnswer):
     
-    global attempts
+    scoreLabel = Label(
+        quizFrame,
+        text=f"Score: {score}",
+        font=("Roboto",14)
+      
+    )
+    scoreLabel.grid(row=4, column=0, pady=10)
+
+    answerEntry = Entry(
+        quizFrame,
+        font=("Roboto", 16),
+        width=10
+    )
+    answerEntry.grid(row=6, column=0, pady=10)
+    
+    resultLabel = Label(
+        quizFrame,
+        text = "",
+        font=("Roboto", 14)
+    )
+    resultLabel.grid(row=8, column=0, pady=10)
+
+    submitButton = Button(
+            quizFrame,
+            text="Submit",
+            font=("Roboto", 14),
+            width=15,
+            command=lambda: isCorrect(
+                int(answerEntry.get()),
+                correctAnswer,
+                resultLabel,
+                scoreLabel
+            )
+    )
+    submitButton.grid(row=7, column=0, pady=5)
+
+def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel): 
+    global score, attempts
 
     if userAnswer == correctAnswer:
         if attempts == 0:
+            score +=10 
             resultLabel.config(text="correct! + 10 Points") 
         else:
+            score += 5
             resultLabel.config(text="correct! + 5 Points")
     else:
-        attempts += 1
+        attempts +=1
         if attempts ==1:
-            resultLabel.config(text="Incorrect! Try Again + 5 Points")
+            resultLabel.config(text="Incorrect! Try Again")
         else:
             resultLabel.config(text="No more Attempts :( )")
+
 
 
 
