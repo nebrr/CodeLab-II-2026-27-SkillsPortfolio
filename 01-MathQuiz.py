@@ -51,7 +51,7 @@ def displayMenu():
         width=15,
         command=lambda: startQuiz("Moderate")
         )
-    moderateButton.grid(row=3, column=0, pady=5)
+    moderateButton.grid(row=3, column=0, pady=20)
 
     advancedButton = Button(
         menuFrame,
@@ -103,7 +103,7 @@ def displayProblem (difficulty):
         text=f"{number1} {operation} {number2} = ?",
         font=("Roboto", 22) 
     )
-    questionLabel.grid(row=5, column=0, pady=20)
+    questionLabel.grid(row=5, column=2, pady=20)
 
 answerEntry = Entry(
     quizFrame,
@@ -121,11 +121,25 @@ submitButton = Button(
 )
 submitButton.grid(row=7, column=0, pady=5)
 
+
+
 def isCorrect(userAnswer, correctAnswer):
+    
+    global attempts
+
     if userAnswer == correctAnswer:
-        resultLabel.config(text="correct!")
+        if attempts == 0:
+            resultLabel.config(text="correct! + 10 Points") 
+        else:
+            resultLabel.config(text="correct! + 5 Points")
     else:
-        resultLabel.config(text="incorrect!")
+        attempts += 1
+        if attempts ==1:
+            resultLabel.config(text="Incorrect! Try Again + 5 Points")
+        else:
+            resultLabel.config(text="No more Attempts :( )")
+
+
 
 displayMenu()
 root.mainloop()   
