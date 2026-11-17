@@ -105,7 +105,27 @@ def displayProblem (difficulty):
     )
     questionLabel.grid(row=5, column=0, pady=20)
 
-    
+answerEntry = Entry(
+    quizFrame,
+    font=("Roboto", 16),
+    width=10
+)
+answerEntry.grid(row=6, column=0, pady=10)
+
+submitButton = Button(
+    quizFrame,
+    text="Submit",
+    font=("Roboto", 14),
+    width=15,
+    command=lambda: isCorrect(int(answerEntry.get()), correctAnswer)
+)
+submitButton.grid(row=7, column=0, pady=5)
+
+def isCorrect(userAnswer, correctAnswer):
+    if userAnswer == correctAnswer:
+        resultLabel.config(text="correct!")
+    else:
+        resultLabel.config(text="incorrect!")
 
 displayMenu()
 root.mainloop()   
