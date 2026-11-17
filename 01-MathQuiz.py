@@ -2,21 +2,27 @@ from tkinter import *
 from random import randint
 score = 0
 attempts = 0
+difficulty = ""
+questionNumber = 0
 
 
 root= Tk()
 root.geometry("500x500")
 root.title("Math Quiz")
-root.grid_columnconfigure(0, weight=1)
 root['bg']='beige'
+root.grid_columnconfigure(0, weight=1)
+root.grid_rowconfigure(0, weight=1)
+
 
 # Frames Switching
 menuFrame = Frame(root, bg = "beige")
 menuFrame.grid(row=0, column=0, sticky="nsew")
+menuFrame.grid_columnconfigure(0, weight=1)
+
 
 quizFrame = Frame(root, bg = "beige")
 quizFrame.grid(row=0, column=0, sticky="nsew")
-
+quizFrame.grid_columnconfigure(0, weight=1)
 menuFrame.tkraise()
 
 
@@ -65,7 +71,13 @@ def displayMenu():
         )
     advancedButton.grid(row=4, column=0, pady=5)
 
-def startQuiz(difficulty):
+def startQuiz(selectedDifficulty):
+    global difficulty, score, attempts, questionNumber
+    
+    difficulty = selectedDifficulty
+    score = 0
+    attempts = 0 
+    questionNumber = 0
     menuFrame.lower()
     quizFrame.tkraise()
     displayProblem(difficulty)
@@ -91,6 +103,15 @@ def decideOperation():
         return "-"  
     
 def displayProblem (difficulty):
+    global attempts, questionNumber
+    attempts = 0
+    questionNumber += 1
+    questionCounterLabel = Label(
+        quizFrame,
+        text=f"Question{questionNumber}/10",
+        font=("Roboto",14)
+    )
+    questionCounterLabel.grid(row=3, column=0, pady=10)
     number1 = randomInt(difficulty)
     number2 = randomInt(difficulty)
     operation = decideOperation()
@@ -105,7 +126,7 @@ def displayProblem (difficulty):
         text=f"{number1} {operation} {number2} = ?",
         font=("Roboto", 22) 
     )
-    questionLabel.grid(row=5, column=2, pady=20)
+    questionLabel.grid(row=4, column=0, pady=10)
     
     scoreLabel = Label(
         quizFrame,
@@ -113,7 +134,7 @@ def displayProblem (difficulty):
         font=("Roboto",14)
       
     )
-    scoreLabel.grid(row=4, column=0, pady=10)
+    scoreLabel.grid(row=5, column=0, pady=20)
 
     answerEntry = Entry(
         quizFrame,
@@ -153,6 +174,8 @@ def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel):
         else:
             score += 5
             resultLabel.config(text="correct! + 5 Points")
+        
+        nextQuestion()    
     else:
         attempts +=1
         if attempts ==1:
@@ -160,6 +183,8 @@ def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel):
         else:
             resultLabel.config(text="No more Attempts :( )")
 
+def nextQuestion():
+    displayProblem(difficulty)
 
 
 
