@@ -181,7 +181,7 @@ def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel):
         if attempts ==1:
             resultLabel.config(text="Incorrect! Try Again")
         else:
-            resultLabel.config(text="No more Attempts :( )")
+            resultLabel.config(text="No more Attempts :( ")
 
 def nextQuestion():
     displayProblem(difficulty)
