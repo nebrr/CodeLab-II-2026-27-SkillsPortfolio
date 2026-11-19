@@ -8,27 +8,30 @@ question_finished = False
 
 
 root= Tk()
-root.geometry("500x500")
+root.geometry("700x500")
+root.resizable(0,0)
 root.title("Math Quiz")
-root['bg']='#926c4d'
+root.configure(bg='#926c4d')
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure(0, weight=1)
 
 
 # Frames Switching
-menuFrame = Frame(root, bg = "#926c4d")
+menuFrame = Frame(root, bg = "#8baf55")
 menuFrame.grid(row=0, column=0, sticky="nsew")
 menuFrame.grid_columnconfigure(0, weight=1)
 
 
-quizFrame = Frame(root, bg = "#926c4d")
+quizFrame = Frame(root, bg = "#8baf55")
 quizFrame.grid(row=0, column=0, sticky="nsew")
 quizFrame.grid_columnconfigure(0, weight=1)
+
+resultsFrame = Frame(root, bg ="#8baf55")
+resultsFrame.grid(row=0, column=0, sticky="nsew")
+resultsFrame.grid_columnconfigure(0, weight=1)
+resultsFrame.grid_remove()
 menuFrame.tkraise()
 
-
-resultsFrame = Frame(root, bg="#926c4d")
-resultsFrame.grid(row=0, column=0, sticky="nsew")
 resultsFrame.grid_remove()
 
 menuFrame.tkraise()
@@ -40,15 +43,18 @@ def displayMenu():
         menuFrame,
         text="Math Quiz",
         font=("Minecraft", 22),
-        bg=  "#926c4d"
+        bg="#8baf55",
+        fg="white"
+        
     )
-    headingLabel.grid(row=0, column=0, pady=20)
+    headingLabel.grid(row=0, column=0, pady=(60, 20))
 
     difficultyLabel = Label(
         menuFrame,
         text="Select Difficulty",
-        font= ("Minecraft", 16),
-        bg = "#926c4d"
+        font= ("Minecraft", 14),
+        bg="#8baf55",
+        fg="#26351c"
     )
     difficultyLabel.grid(row=1, column=0, pady=10)
 
@@ -56,25 +62,31 @@ def displayMenu():
         menuFrame,
         text="Easy",
         font= ("Minecraft", 14),
-        width=15,
+        width=18,
+        bg="#b5d66b",
+        fg="#26351c",
         command=lambda: startQuiz("Easy")
         )
-    easyButton.grid(row=2, column=0, pady=5)
+    easyButton.grid(row=2, column=0, pady=8)
 
     moderateButton = Button(
         menuFrame,
-        text="Moderate",
+        text="MEDIUM",
         font= ("Minecraft", 14),
-        width=15,
+        width=18,
+        bg="#c99b55",
+        fg="white",
         command=lambda: startQuiz("Moderate")
         )
     moderateButton.grid(row=3, column=0, pady=20)
 
     advancedButton = Button(
         menuFrame,
-        text="Advanced",
+        text="HARD",
         font= ("Minecraft", 14),
-        width=15,
+        width=18,
+        bg="#8b4545",
+        fg="white",
         command=lambda: startQuiz("Advanced")
         )
     advancedButton.grid(row=4, column=0, pady=5)
@@ -109,62 +121,74 @@ def decideOperation():
         return "+"
     elif operation == 2:
         return "-"  
-    
-def displayProblem (difficulty):
+
+# Display Problem (Questions) 
+def displayProblem(difficulty):
     global attempts, questionNumber
+
     for widget in quizFrame.winfo_children():
         widget.destroy()
+
     attempts = 0
     questionNumber += 1
-    questionCounterLabel = Label(
-        quizFrame,
-        text=f"Question{questionNumber}/10",
-        font=("Minecraft",14)
-    )
-    questionCounterLabel.grid(row=3, column=0, pady=10)
+
     number1 = randomInt(difficulty)
     number2 = randomInt(difficulty)
     operation = decideOperation()
-        
+
     if operation == "+":
         correctAnswer = number1 + number2
     elif operation == "-":
         correctAnswer = number1 - number2
-        
-    questionLabel = Label(
+
+    # Question Counter
+    questionCounterLabel = Label(
         quizFrame,
-        text=f"{number1} {operation} {number2} = ?",
-        font=("Minecraft", 22) 
+        text=f"QUESTION {questionNumber}/10",
+        font=("Minecraft", 14),
+        bg="#8baf55",
+        fg="#26351c"
     )
-    questionLabel.grid(row=4, column=0, pady=10)
+    questionCounterLabel.grid(row=0, column=0, pady=(40, 20))
     
+    
+    # Score function
     scoreLabel = Label(
         quizFrame,
-        text=f"Score: {score}",
-        font=("Minecraft",14)
+        text=f"SCORE: {score}",
+        font=("Minecraft",14),
+        bg="#8baf55",
+        fg="#26351c"
       
     )
-    scoreLabel.grid(row=5, column=0, pady=20)
+    scoreLabel.grid(row=2, column=0, pady=20)
 
+    # Answer Box
     answerEntry = Entry(
         quizFrame,
         font=("Minecraft", 16),
-        width=10
+        width=15,
+        justify="center"
     )
-    answerEntry.grid(row=6, column=0, pady=10)
+    answerEntry.grid(row=3, column=0, pady=15)
     
+    # Result Message
     resultLabel = Label(
         quizFrame,
         text = "",
-        font=("Minecraft", 14)
+        font=("Minecraft", 12),
+        bg="#8baf55",
+        fg="white"
     )
-    resultLabel.grid(row=8, column=0, pady=10)
+    resultLabel.grid(row=5, column=0, pady=10)
 
     submitButton = Button(
             quizFrame,
-            text="Submit",
+            text="SUBMIT",
             font=("Minecraft", 14),
-            width=15,
+            width=18,
+            bg="#c99b55",
+            fg="white",
             command=lambda: isCorrect(
                 int(answerEntry.get()),
                 correctAnswer,
@@ -172,7 +196,7 @@ def displayProblem (difficulty):
                 scoreLabel
             )
     )
-    submitButton.grid(row=7, column=0, pady=5)
+    submitButton.grid(row=4, column=0, pady=25)
 
 def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel): 
     global score, attempts
