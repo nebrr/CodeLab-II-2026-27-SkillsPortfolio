@@ -4,23 +4,24 @@ score = 0
 attempts = 0
 difficulty = ""
 questionNumber = 0
+question_finished = False
 
 
 root= Tk()
 root.geometry("500x500")
 root.title("Math Quiz")
-root['bg']='beige'
+root['bg']='#926c4d'
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure(0, weight=1)
 
 
 # Frames Switching
-menuFrame = Frame(root, bg = "beige")
+menuFrame = Frame(root, bg = "#926c4d")
 menuFrame.grid(row=0, column=0, sticky="nsew")
 menuFrame.grid_columnconfigure(0, weight=1)
 
 
-quizFrame = Frame(root, bg = "beige")
+quizFrame = Frame(root, bg = "#926c4d")
 quizFrame.grid(row=0, column=0, sticky="nsew")
 quizFrame.grid_columnconfigure(0, weight=1)
 menuFrame.tkraise()
@@ -33,21 +34,21 @@ def displayMenu():
     headingLabel = Label(
         menuFrame,
         text="Math Quiz",
-        font=("Roboto", 22)
+        font=("Minecraft", 22)
     )
     headingLabel.grid(row=0, column=0, pady=20)
 
     difficultyLabel = Label(
         menuFrame,
         text="Select Difficulty",
-        font= ("Roboto", 16)
+        font= ("Minecraft", 16)
     )
     difficultyLabel.grid(row=1, column=0, pady=10)
 
     easyButton = Button(
         menuFrame,
         text="Easy",
-        font= ("Roboto", 14),
+        font= ("Minecraft", 14),
         width=15,
         command=lambda: startQuiz("Easy")
         )
@@ -56,7 +57,7 @@ def displayMenu():
     moderateButton = Button(
         menuFrame,
         text="Moderate",
-        font= ("Roboto", 14),
+        font= ("Minecraft", 14),
         width=15,
         command=lambda: startQuiz("Moderate")
         )
@@ -65,7 +66,7 @@ def displayMenu():
     advancedButton = Button(
         menuFrame,
         text="Advanced",
-        font= ("Roboto", 14),
+        font= ("Minecraft", 14),
         width=15,
         command=lambda: startQuiz("Advanced")
         )
@@ -109,7 +110,7 @@ def displayProblem (difficulty):
     questionCounterLabel = Label(
         quizFrame,
         text=f"Question{questionNumber}/10",
-        font=("Roboto",14)
+        font=("Minecraft",14)
     )
     questionCounterLabel.grid(row=3, column=0, pady=10)
     number1 = randomInt(difficulty)
@@ -124,21 +125,21 @@ def displayProblem (difficulty):
     questionLabel = Label(
         quizFrame,
         text=f"{number1} {operation} {number2} = ?",
-        font=("Roboto", 22) 
+        font=("Minecraft", 22) 
     )
     questionLabel.grid(row=4, column=0, pady=10)
     
     scoreLabel = Label(
         quizFrame,
         text=f"Score: {score}",
-        font=("Roboto",14)
+        font=("Minecraft",14)
       
     )
     scoreLabel.grid(row=5, column=0, pady=20)
 
     answerEntry = Entry(
         quizFrame,
-        font=("Roboto", 16),
+        font=("Minecraft", 16),
         width=10
     )
     answerEntry.grid(row=6, column=0, pady=10)
@@ -146,14 +147,14 @@ def displayProblem (difficulty):
     resultLabel = Label(
         quizFrame,
         text = "",
-        font=("Roboto", 14)
+        font=("Minecraft", 14)
     )
     resultLabel.grid(row=8, column=0, pady=10)
 
     submitButton = Button(
             quizFrame,
             text="Submit",
-            font=("Roboto", 14),
+            font=("Minecraft", 14),
             width=15,
             command=lambda: isCorrect(
                 int(answerEntry.get()),
@@ -185,6 +186,30 @@ def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel):
 
 def nextQuestion():
     displayProblem(difficulty)
+    
+    
+    
+def calculateGrade():
+    if score >= 80:
+        return "A"
+    elif score >= 70:
+        return "B"
+    elif score >= 60:
+        return "C"
+    elif score >= 50:
+        return "D"
+    else:
+        return "F"
+    
+def displayResults():
+    grade = calculateGrade()
+    
+    questionLabel.config
+    
+    
+    
+    
+    
 
 
 
