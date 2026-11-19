@@ -27,6 +27,11 @@ quizFrame.grid_columnconfigure(0, weight=1)
 menuFrame.tkraise()
 
 
+resultsFrame = Frame(root, bg="#926c4d")
+resultsFrame.grid(row=0, column=0, sticky="nsew")
+resultsFrame.grid_remove()
+
+menuFrame.tkraise()
 
 # Difficulty Menu
 def displayMenu():
@@ -34,14 +39,16 @@ def displayMenu():
     headingLabel = Label(
         menuFrame,
         text="Math Quiz",
-        font=("Minecraft", 22)
+        font=("Minecraft", 22),
+        bg=  "#926c4d"
     )
     headingLabel.grid(row=0, column=0, pady=20)
 
     difficultyLabel = Label(
         menuFrame,
         text="Select Difficulty",
-        font= ("Minecraft", 16)
+        font= ("Minecraft", 16),
+        bg = "#926c4d"
     )
     difficultyLabel.grid(row=1, column=0, pady=10)
 
@@ -105,6 +112,8 @@ def decideOperation():
     
 def displayProblem (difficulty):
     global attempts, questionNumber
+    for widget in quizFrame.winfo_children():
+        widget.destroy()
     attempts = 0
     questionNumber += 1
     questionCounterLabel = Label(
@@ -183,13 +192,69 @@ def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel):
             resultLabel.config(text="Incorrect! Try Again")
         else:
             resultLabel.config(text="No more Attempts :( ")
+            nextQuestion()
 
 def nextQuestion():
-    displayProblem(difficulty)
+    if questionNumber >=10:
+        displayResults()
+    else:
+        displayProblem(difficulty)
     
+
+def displayResults():
+    quizFrame.grid_remove()
+    resultsFrame.grid()
+    resultsFrame.tkraise()
+    
+    for widget in resultsFrame.winfo_children():
+        widget.destroy()
+    
+    resultsLabel = Label(
+        resultsFrame,
+        text ="QUIZ FINISHED!",
+        font=("Minecraft", 22),
+         bg="#926c4d"
+    )
+    resultsLabel.grid(row=0, column=0, pady=20)
+    
+    finalScoreLabel = Label(
+        resultsFrame,
+        text=f"Final Score {score}/100",
+        font=("Minecraft", 18),
+        bg = "#926c4d"
+    )
+    finalScoreLabel.grid (row=1, column=0, pady=10)
+    
+    gradeLabel = Label(
+        resultsFrame,
+        text=f"Grade: {calculateGrade()}",
+        font=("Minecraft", 18),
+        bg="#926c4d"
+    )
+    gradeLabel.grid(row=2, column=0, pady=10)
+    
+    playAgainButton = Button(
+        resultsFrame, 
+        text= "Play Again?",
+        font=("Minecraft", 14),
+        width =15,
+        command=playAgain
+    )
+    playAgainButton.grid(row=3, column=0, pady =10)
+    
+    exitButton = Button(
+        resultsFrame,
+        text= "Leave",
+        font=("Minecraft", 14),
+        width=15,
+        command=root.destroy
+    )
+    exitButton.grid(row=4, column =0, pady=10)
     
     
 def calculateGrade():
+    if score > 90:
+        return "A+"
     if score >= 80:
         return "A"
     elif score >= 70:
@@ -201,17 +266,16 @@ def calculateGrade():
     else:
         return "F"
     
-def displayResults():
-    grade = calculateGrade()
     
-    questionLabel.config
+def playAgain():
+    global score, attempts, questionNumber
     
+    score = 0
+    attempts = 0
+    questionNumber = 0
     
+    resultsFrame.grid_remove()
+    menuFrame.tkraise()
     
-    
-    
-
-
-
 displayMenu()
 root.mainloop()   
