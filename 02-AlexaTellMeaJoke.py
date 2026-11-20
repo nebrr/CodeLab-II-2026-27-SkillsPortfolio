@@ -6,14 +6,12 @@ with open("Resources/randomJokes.txt", "r", encoding='utf-8') as file:
 
 punchline_text = [""]
 
-
 root = Tk()
-
 root.title ("JoJOKE")
 root.geometry("500x400")
 root['bg'] = '#926c4d'
 
-
+# Generates and choose random joke from the txt file
 def genJoke():
     selected_joke = choice(jokes).strip()
     question, punchline = selected_joke.split("?",1)
@@ -22,6 +20,12 @@ def genJoke():
     
     jokeLabel.config(text=question + "?")
     punchlineLabel.config(text="")
+
+# A function to show the punchline when the button is pressed
+def revealPunchline():
+    punchlineLabel.config(text=punchline_text[0])
+
+
 # MAIN FRAME 
 titleFrame = Frame(
     root,
@@ -39,7 +43,7 @@ jokeFrame.pack(
     fill='both',
     expand=True
     )
-
+# MAIN TITLE
 titleLabel = Label(
     titleFrame,
     text = "JoJOKE",
@@ -48,16 +52,16 @@ titleLabel = Label(
     fg="white"
 )
 titleLabel.pack()
-
+# SUB TEXT BELOW THE TITLE
 subtitleLabel = Label(
     titleFrame,
-    text = "Wanna heat a Joke?",
+    text = "Wanna hear a Joke?",
     font = ("Minecraft", 15),
     bg="#926c4d",
     fg="white"
 )
 subtitleLabel.pack()
-
+# JOKE LABEL 
 jokeLabel = Label(
     jokeFrame,
     text= "Your Jojoke appears here!",
@@ -68,9 +72,10 @@ jokeLabel = Label(
 )
 jokeLabel.pack(pady = 30)
 
+# PUNCHLINE LABEL (Text)
 punchlineLabel = Label(
     jokeFrame,
-    text="yoohoo dito ang tingin",
+    text="Punchline appears here",
     font=("Minecraft", 12),
     bg="#f5e6d3",
     fg="#926c4d",
@@ -78,7 +83,7 @@ punchlineLabel = Label(
 )
 punchlineLabel.pack(pady=10)
  
- # BUTTONS
+ # BUTTONS SECTION
 buttonFrame = Frame(
     jokeFrame,
     bg="#f5e6d3"
@@ -87,6 +92,7 @@ buttonFrame.pack(pady=20)
 buttonFrame.grid_columnconfigure(0, weight=1)
 buttonFrame.grid_columnconfigure(1, weight=1)
 
+# BUTTON TO GENERATE THE JOKE
 jokeButton = Button(
     buttonFrame,
     text = "Sure tell me the joke",
@@ -97,30 +103,35 @@ jokeButton = Button(
 )
 jokeButton.grid(row=0, column=0, padx=15,pady=15)
 
+# SHOWS THE PUNCHLINE
 punchlineButton = Button(
     buttonFrame,
     text="Hmm.. idk what is it?",
     font=("Minecraft", 13),
     bg="#926c4d",
-    fg="white"
+    fg="white",
+    command=revealPunchline
 )
 punchlineButton.grid(row=0, column=1, padx=15, pady=15)
-
+ # NEXT JOKE
 nextButton = Button(
     buttonFrame,
     text="Another one",
     font=("Minecraft", 13),
     bg="#926c4d",
-    fg="white"
+    fg="white",
+    command= genJoke
 )
 nextButton.grid(row=1, column=0, padx=15, pady=15)
 
+# QUIT BUTTON
 quitButton = Button(
     buttonFrame,
     text="Ok.. enough",
     font=("Minecraft", 12),
     bg="#926c4d",
-    fg="white"
+    fg="white",
+    command = root.destroy
 )
 quitButton.grid(row=1, column=1, padx=15, pady=15)
 
