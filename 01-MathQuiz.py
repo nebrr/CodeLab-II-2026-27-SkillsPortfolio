@@ -7,7 +7,6 @@ difficulty = ""
 questionNumber = 0
 question_finished = False
 
-
 root= Tk()
 root.geometry("700x500")
 root.resizable(0,0)

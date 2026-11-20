@@ -1,5 +1,12 @@
 from tkinter import *
 from random import choice
+
+with open("Resources/randomJokes.txt", "r", encoding='utf-8') as file:
+    jokes = file.readlines() # Reads all of the lines of the txt file
+
+punchline_text = [""]
+
+
 root = Tk()
 
 root.title ("JoJOKE")
@@ -7,7 +14,15 @@ root.geometry("500x400")
 root['bg'] = '#926c4d'
 
 
-# ALL THE FRAME
+def genJoke():
+    selected_joke = choice(jokes).strip()
+    question, punchline = selected_joke.split("?",1)
+    
+    punchline_text[0] = punchline
+    
+    jokeLabel.config(text=question + "?")
+    punchlineLabel.config(text="")
+# MAIN FRAME 
 titleFrame = Frame(
     root,
     bg='#926c4d'
@@ -72,13 +87,13 @@ buttonFrame.pack(pady=20)
 buttonFrame.grid_columnconfigure(0, weight=1)
 buttonFrame.grid_columnconfigure(1, weight=1)
 
-
 jokeButton = Button(
     buttonFrame,
     text = "Sure tell me the joke",
     font=("Minecraft",13),
     bg="#926c4d",
-    fg="white"
+    fg="white",
+    command=genJoke
 )
 jokeButton.grid(row=0, column=0, padx=15,pady=15)
 
