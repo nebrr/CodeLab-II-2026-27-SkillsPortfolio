@@ -4,6 +4,7 @@ from random import choice
 with open("Resources/randomJokes.txt", "r", encoding='utf-8') as file:
     jokes = file.readlines() # Reads all of the lines of the txt file
 
+
 punchline_text = [""]
 
 root = Tk()
@@ -21,11 +22,14 @@ def genJoke():
     jokeLabel.config(text=question + "?")
     punchlineLabel.config(text="")
 
-# A function to show the punchline when the button is pressed
+# This function is to show the punchline when the button is pressed
 def revealPunchline():
-    punchlineLabel.config(text=punchline_text[0])
-
-
+   # this prevents the blank response when the button is pressed 
+    if punchline_text[0]=="":
+       punchlineLabel.config(text="I didn't even say the joke yet!")
+    else:
+       punchlineLabel.config(text=punchline_text[0])
+    
 # MAIN FRAME 
 titleFrame = Frame(
     root,
