@@ -2,9 +2,7 @@ from tkinter import *
 from random import choice
 
 with open("Resources/randomJokes.txt", "r", encoding='utf-8') as file:
-    jokes = file.readlines() # Reads all of the lines of the txt file
-
-
+    jokes = file.readlines() # This reads all of the lines of the txt file
 punchline_text = [""]
 
 root = Tk()
