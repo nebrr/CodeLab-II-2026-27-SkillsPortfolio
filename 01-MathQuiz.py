@@ -39,81 +39,112 @@ bgImage = Image.open("images/DirtBackround.jpg")
 bgImage = bgImage.resize((700, 500))
 bgPhoto = ImageTk.PhotoImage(bgImage)
 
-bgLabel = Label(menuFrame, image=bgPhoto, borderwidth=0)
-bgLabel.image = bgPhoto
-bgLabel.place(x=0, y=0, relwidth=1, relheight=1)
-bgLabel.lower()
+menuCanvas = Canvas(
+    menuFrame,
+    width=700,
+    height=500,
+    highlightthickness=0
+)
+menuCanvas.place(x=0, y=0)
 
-quizBgLabel = Label(quizFrame, image= bgPhoto, borderwidth=0)
-quizBgLabel.image = bgPhoto
-quizBgLabel.place(x=0, y=0, relwidth=1, relheight=1)
+menuCanvas.create_image(
+    0,0,
+    image=bgPhoto,
+    anchor="nw"
+)
 
-resultBgLabel= Label(resultsFrame, image=bgPhoto, borderwidth=0)
-resultBgLabel.image = bgPhoto
-resultBgLabel.place(x=0, y=0, relwidth=1, relheight=1)
+# Title Text
+menuCanvas.create_text(
+    350, 80,
+    text="Math Quiz",
+    font=("Minecraft", 30),
+    fill="white"
+)
+menuCanvas.create_text(
+    350, 155,
+    text="Select Difficulty",
+    font=("Minecraft", 20),
+    fill="white"
+)
 
+# QUIZ FRAME BACKGROUND
+quizCanvas = Canvas(
+    quizFrame,
+    width=700,
+    height=500,
+    highlightthickness=0
+)
+quizCanvas.place(x=0, y=0)
 
+# RESULTS FRAME BACKGROUND
+resultsCanvas = Canvas(
+    resultsFrame,
+    width=700,
+    height=500,
+    highlightthickness=0
+)
+resultsCanvas.place(x=0, y=0)
+
+menuCanvas.tk.call("lower", menuCanvas._w)
 menuFrame.tkraise()
 
 # Difficulty Menu
 def displayMenu():
-   
-    headingLabel = Label(
-        menuFrame,
-        text="Math Quiz",
-        font=("Minecraft", 30),
-        bg="white",
-        fg="black"
-        
-    )
-    headingLabel.grid(row=0, column=0, pady=(60, 20))
 
-    difficultyLabel = Label(
-        menuFrame,
-        text="Select Difficulty",
-        font= ("Minecraft", 20),
-        bg="white",
-        fg="black"
-    )
-    difficultyLabel.grid(row=1, column=0, pady=10)
-
+    # EASY BUTTON
     easyButton = Button(
         menuFrame,
         text="Easy",
-        font= ("Minecraft", 14),
+        font=("Minecraft", 14),
         width=18,
         bg="#777777",
         fg="white",
-        relief= RAISED,
+        relief=RAISED,
         bd=5,
         command=lambda: startQuiz("Easy")
-        )
-    easyButton.grid(row=2, column=0, pady=8)
+    )
 
+    menuCanvas.create_window(
+        350, 230,
+        window=easyButton
+    )
+
+    # MEDIUM BUTTON
     moderateButton = Button(
         menuFrame,
         text="MEDIUM",
-        font= ("Minecraft", 14),
+        font=("Minecraft", 14),
         width=18,
         bg="#777777",
         fg="white",
         relief=RAISED,
         bd=5,
         command=lambda: startQuiz("Moderate")
-        )
-    moderateButton.grid(row=3, column=0, pady=20)
+    )
 
+    menuCanvas.create_window(
+        350, 300,
+        window=moderateButton
+    )
+
+    # HARD BUTTON
     advancedButton = Button(
         menuFrame,
         text="HARD",
-        font= ("Minecraft", 14),
+        font=("Minecraft", 14),
         width=18,
         bg="#777777",
         fg="white",
         bd=5,
         command=lambda: startQuiz("Advanced")
-        )
-    advancedButton.grid(row=4, column=0, pady=5)
+    )
+
+    menuCanvas.create_window(
+        350, 370,
+        window=advancedButton
+    )
+
+
 
 def startQuiz(selectedDifficulty):
     global difficulty, score, attempts, questionNumber
@@ -122,7 +153,7 @@ def startQuiz(selectedDifficulty):
     score = 0
     attempts = 0 
     questionNumber = 0
-    menuFrame.lower()
+    quizFrame.grid()
     quizFrame.tkraise()
     displayProblem(difficulty)
 
@@ -147,12 +178,21 @@ def decideOperation():
         return "-"  
 
 # Display Problem (Questions) 
+
 def displayProblem(difficulty):
     global attempts, questionNumber
+
     for widget in quizFrame.winfo_children():
-        if widget is not quizBgLabel:
+        if widget is not quizCanvas:
             widget.destroy()
-   
+
+    quizCanvas.delete("all")
+
+    quizCanvas.create_image(
+        0, 0,
+        image=bgPhoto,
+        anchor="nw"
+    )
 
     attempts = 0
     questionNumber += 1
@@ -165,105 +205,133 @@ def displayProblem(difficulty):
         correctAnswer = number1 + number2
     elif operation == "-":
         correctAnswer = number1 - number2
-        
-    # MATH QUESTIONAIRE
-    questionLabel = Label(
-        quizFrame,
+
+    # QUESTION COUNTER
+    quizCanvas.create_text(
+        350, 70,
+        text=f"QUESTION {questionNumber}/10",
+        font=("Minecraft", 18),
+        fill="white"
+    )
+
+    # MATH QUESTION
+    quizCanvas.create_text(
+        350, 145,
         text=f"{number1} {operation} {number2} = ?",
         font=("Minecraft", 24),
-        bg="white",
-        fg="black"
+        fill="white"
     )
-    questionLabel.grid(row=1, column=0, pady=15)
 
-    # Question Counter
-    questionCounterLabel = Label(
-        quizFrame,
-        text=f"QUESTION {questionNumber}/10",
-        font=("Minecraft", 14),
-        bg="white",
-        fg="#26351c"
-    )
-    questionCounterLabel.grid(row=0, column=0, pady=(40, 20))
-    
-    
-    # Score function
-    scoreLabel = Label(
-        quizFrame,
+    # SCORE
+    scoreText = quizCanvas.create_text(
+        350, 210,
         text=f"SCORE: {score}",
-        font=("Minecraft",14),
-        bg="white",
-        fg="#26351c"
-      
+        font=("Minecraft", 18),
+        fill="white"
     )
-    scoreLabel.grid(row=2, column=0, pady=20)
 
-    # Answer Box
+    # ANSWER BOX
     answerEntry = Entry(
         quizFrame,
         font=("Minecraft", 16),
         width=15,
         justify="center"
     )
-    answerEntry.grid(row=3, column=0, pady=15)
-    
-    # Result Message
-    resultLabel = Label(
-        quizFrame,
-        text = "",
-        font=("Minecraft", 12),
-        bg="white",
-        fg="black"
-        
-    )
-    resultLabel.grid(row=5, column=0, pady=10)
 
-    submitButton = Button(
-            quizFrame,
-            text="SUBMIT",
-            font=("Minecraft", 14),
-            width=25,
-            height = 2,
-            bg="#777777",
-            fg="white",
-            relief=RAISED,
-            bd=5,
-            command=lambda: submit_answer(
-                answerEntry,
-                correctAnswer,
-                resultLabel,
-                scoreLabel
-            )
+    quizCanvas.create_window(
+        350, 270,
+        window=answerEntry
     )
-    submitButton.grid(row=4, column=0, pady=30)
+
+    # RESULT MESSAGE
+    resultText = quizCanvas.create_text(
+        350, 325,
+        text="",
+        font=("Minecraft", 14),
+        fill="white"
+    )
+
+    # SUBMIT BUTTON
+    submitButton = Button(
+        quizFrame,
+        text="SUBMIT",
+        font=("Minecraft", 14),
+        width=25,
+        height=2,
+        bg="#777777",
+        fg="white",
+        relief=RAISED,
+        bd=5,
+        command=lambda: submit_answer(
+            answerEntry,
+            correctAnswer,
+            resultText,
+            scoreText
+        )
+    )
+
+    quizCanvas.create_window(
+        350, 405,
+        window=submitButton
+    )
+
     
-def submit_answer(answerEntry, correctAnswer, resultLabel, scoreLabel):
+def submit_answer(answerEntry, correctAnswer, resultText, scoreText):
     user_input = answerEntry.get()
+
     try:
         userAnswer = int(user_input)
-        isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel)
+
+        isCorrect(
+            userAnswer,
+            correctAnswer,
+            resultText,
+            scoreText
+        )
+
     except ValueError:
-        resultLabel.config(text="Please enter a valid number!")
+        quizCanvas.itemconfig(
+            resultText,
+            text="Please enter a valid number!"
+        )
     
 
-def isCorrect(userAnswer, correctAnswer, resultLabel, scoreLabel): 
+def isCorrect(userAnswer, correctAnswer, resultText, scoreText):
     global score, attempts
-
+   
     if userAnswer == correctAnswer:
         if attempts == 0:
-            score +=10 
-            resultLabel.config(text="correct! + 10 Points") 
+            score += 10
+            quizCanvas.itemconfig(
+                resultText,
+                text="Correct! +10 Points"
+            )
         else:
             score += 5
-            resultLabel.config(text="correct! + 5 Points")
-        
-        nextQuestion()    
+            quizCanvas.itemconfig(
+                resultText,
+                text="Correct! +5 Points"
+            )
+        quizCanvas.itemconfig(
+            scoreText,
+            text=f"SCORE: {score}"
+        )
+        nextQuestion()
+
     else:
-        attempts +=1
-        if attempts ==1:
-            resultLabel.config(text="Incorrect! Try Again")
+        attempts += 1
+
+        if attempts == 1:
+            quizCanvas.itemconfig(
+                resultText,
+                text="Incorrect! Try Again"
+            )
         else:
-            resultLabel.config(text="No more Attempts :( ")
+            quizCanvas.itemconfig(
+                resultText,
+                text="No more Attempts :("
+            )
+
             nextQuestion()
 
 def nextQuestion():
@@ -273,66 +341,85 @@ def nextQuestion():
         displayProblem(difficulty)
     
 
+
 def displayResults():
+
     for widget in resultsFrame.winfo_children():
-        if widget is not resultBgLabel:
+        if widget is not resultsCanvas:
             widget.destroy()
-       
-    
+
+    resultsCanvas.delete("all")
+
+    resultsCanvas.create_image(
+        0, 0,
+        image=bgPhoto,
+        anchor="nw"
+    )
+
     quizFrame.grid_remove()
     resultsFrame.grid()
     resultsFrame.tkraise()
-    resultBgLabel.lower()
-    
-    # Create the results label and buttons
-    resultsLabel = Label(
-        resultsFrame,
-        text ="QUIZ FINISHED!",
-        font=("Minecraft", 22),
-         bg="#926c4d"
+
+    # RESULTS TITLE
+    resultsCanvas.create_text(
+        350, 90,
+        text="QUIZ FINISHED!",
+        font=("Minecraft", 26),
+        fill="white"
     )
-    resultsLabel.grid(row=0, column=0, pady=20)
-    
-    finalScoreLabel = Label(
-        resultsFrame,
-        text=f"Final Score {score}/100",
-        font=("Minecraft", 18),
-        bg = "#926c4d"
+
+    # FINAL SCORE
+    resultsCanvas.create_text(
+        350, 165,
+        text=f"Final Score: {score}/100",
+        font=("Minecraft", 20),
+        fill="white"
     )
-    finalScoreLabel.grid (row=1, column=0, pady=10)
-    
-    gradeLabel = Label(
-        resultsFrame,
+
+    # GRADE
+    resultsCanvas.create_text(
+        350, 220,
         text=f"Grade: {calculateGrade()}",
-        font=("Minecraft", 18),
-        bg="#926c4d"
+        font=("Minecraft", 20),
+        fill="white"
     )
-    gradeLabel.grid(row=2, column=0, pady=10)
-    
+
+    # PLAY AGAIN BUTTON
     playAgainButton = Button(
-        resultsFrame, 
-        text= "Play Again?",
-        font=("Minecraft", 14),
-        width =15,
-        bg= "#777777",
-        relief= RAISED,
-        bd= 5,
-        command=playAgain
-    )
-    playAgainButton.grid(row=3, column=0, pady =10)
-    
-    exitButton = Button(
         resultsFrame,
-        text= "Leave",
+        text="Play Again?",
         font=("Minecraft", 14),
         width=15,
         bg="#777777",
-        relief= RAISED,
+        fg="white",
+        relief=RAISED,
+        bd=5,
+        command=playAgain
+    )
+
+    resultsCanvas.create_window(
+        350, 310,
+        window=playAgainButton
+    )
+
+    # EXIT BUTTON
+    exitButton = Button(
+        resultsFrame,
+        text="Leave",
+        font=("Minecraft", 14),
+        width=15,
+        bg="#777777",
+        fg="white",
+        relief=RAISED,
         bd=5,
         command=root.destroy
     )
-    exitButton.grid(row=4, column =0, pady=10)
-    
+
+    resultsCanvas.create_window(
+        350, 380,
+        window=exitButton
+    )
+
     
 def calculateGrade():
     if score > 90:
