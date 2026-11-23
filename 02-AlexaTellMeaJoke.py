@@ -44,6 +44,8 @@ jokeFrame.pack(
     padx=20,
     fill='both',
     expand=True
+    
+    
     )
 # MAIN TITLE
 titleLabel = Label(
@@ -101,6 +103,8 @@ jokeButton = Button(
     font=("Minecraft",13),
     bg="#926c4d",
     fg="white",
+    bd = 4,
+    relief = RAISED,
     command=genJoke
 )
 jokeButton.grid(row=0, column=0, padx=15,pady=15)
@@ -112,6 +116,8 @@ punchlineButton = Button(
     font=("Minecraft", 13),
     bg="#926c4d",
     fg="white",
+    bd = 4,
+    relief = RAISED,
     command=revealPunchline
 )
 punchlineButton.grid(row=0, column=1, padx=15, pady=15)
@@ -122,6 +128,8 @@ nextButton = Button(
     font=("Minecraft", 13),
     bg="#926c4d",
     fg="white",
+    bd = 4,
+    relief = RAISED,
     command= genJoke
 )
 nextButton.grid(row=1, column=0, padx=15, pady=15)
@@ -133,6 +141,8 @@ quitButton = Button(
     font=("Minecraft", 12),
     bg="#926c4d",
     fg="white",
+    bd = 4,
+    relief = RAISED,
     command = root.destroy
 )
 quitButton.grid(row=1, column=1, padx=15, pady=15)
