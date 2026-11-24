@@ -340,8 +340,7 @@ def nextQuestion():
     else:
         displayProblem(difficulty)
     
-
-
+    
 def displayResults():
 
     for widget in resultsFrame.winfo_children():
