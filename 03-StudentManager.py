@@ -41,6 +41,7 @@ titleLabel = Label(
 )
 titleLabel.pack(pady=20)
 
+
 #Subtext
 subtextLabel = Label(
     menuFrame,
@@ -51,6 +52,59 @@ subtextLabel = Label(
 )
 subtextLabel.pack(pady=5)
 
+# CLASS STATISTICS
+studentCountLabel = Label(
+    resultsFrame,
+    text = "Total Students: ",
+    font=("Roboto", 11),
+    bg="#263445",
+    fg="white"
+)
+studentCountLabel.pack(pady=5)
+
+averageLabel = Label(
+    resultsFrame,
+    text="Class Average: ",
+    font=("Roboto", 11),
+    bg="#263445",
+    fg="white"
+)
+averageLabel.pack(pady=5)
+
+# SEARCH PAGE
+searchTitle = Label(
+    searchFrame,
+    text="SEARCH STUDENT",
+    font=("Roboto", 20, "bold"),
+    bg="#263445",
+    fg="white"
+)
+searchTitle.pack(pady=20)
+
+searchResultLabel = Label(
+    searchFrame,
+    text="",
+    font=("Roboto", 12),
+    bg="#263445",
+    fg="white"
+)
+searchResultLabel.pack(pady=15)
+
+searchEntry = Entry(
+    searchFrame,
+    font=("Roboto", 12),
+    width=30
+)
+searchEntry.pack(pady=10)
+
+searchButton = Button(
+    searchFrame,
+    text="Search Student",
+    font=("Roboto", 12),
+    width=20,
+    command = lambda: searchStudent()
+)
+searchButton.pack(pady=10)
 # View All Records
 viewAllButton = Button(
     menuFrame,
@@ -70,7 +124,11 @@ viewStudentButton = Button(
     menuFrame,
     text = "View Individual Student",
     font =("Roboto", 12),
-    width = 30
+    width = 30,
+    command=lambda: (
+        menuFrame.pack_forget(),
+        searchFrame.pack(fill="both", expand=True)
+    )
 )
 viewStudentButton.pack(pady=8)
 
@@ -142,6 +200,25 @@ def addRow(name, num, marks, exam_marks):
     table.insert("",END, values=values)
 
 # ========= DISPLAY ALL RECORDS ============
+def updateClass():
+    with open ("Resources/studentMarks.json", "r") as file:
+        data = json.load(file)
+        
+    students = data["students"]
+    total = 0
+    
+    for student in students:
+        coursework = (
+            student["coursework1"] +
+            student["coursework2"] +
+            student["coursework3"]
+        )
+        percent = (coursework + student ["examMark"]) / 160 * 100
+        total += percent
+    average = total / len(students)
+    return len(students), average
+
+
 def displayRecords():
     for row in table.get_children():
         table.delete(row)
@@ -163,5 +240,46 @@ def displayRecords():
             marks,
             student["examMark"]
         )
+
+count, average = updateClass()
+studentCountLabel.config(text=f"Total Students: {count}")
+averageLabel.config(text=f"Class Average: {average:.1f}%")    
+
+# ======= SEARCH STUDENT ========
+
+def searchStudent():
+    search = searchEntry.get().strip().lower()
+    
+    with open("Resources/studentMarks.json", "r") as file:
+        
+        data = json.load(file)
+    students = data["students"]
+    
+    for student in students:
+        if search.lower() == student ["name"].strip().lower() or search == str(student["studentNumber"]):
+            
+            coursework = (
+                student["coursework1"]+
+                student["coursework2"]+
+                student["coursework3"]
+            )
+            
+            percent = (coursework + student["examMark"]) / 160 * 100
+            grade = calculateGrade(percent)
+            
+            searchResultLabel.config(
+                text=(
+                    f"Name: {student['name']}\n"
+                    f"Student Number: {student['studentNumber']}\n"
+                    f"Coursework: {coursework}/60\n"
+                    f"Exam: {student['examMark']}/100\n"
+                    f"Percentage: {percent:.1f}%\n"
+                    f"Grade: {grade}"
+                )
+            )
+            return
+    searchResultLabel.config(text="Student not found")    
+            
+            
 
 root.mainloop()
