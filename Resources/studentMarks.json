@@ -1,0 +1,21 @@
+{
+    "numberOfStudents": 2,
+    "students": [
+        {
+            "studentNumber": 1345,
+            "name": "John Curry",
+            "coursework1": 8,
+            "coursework2": 15,
+            "coursework3": 7,
+            "examMark": 45
+        },
+        {
+            "studentNumber": 2345,
+            "name": "Sam Sturtivant",
+            "coursework1": 14,
+            "coursework2": 15,
+            "coursework3": 14,
+            "examMark": 77
+        }
+    ]
+}
