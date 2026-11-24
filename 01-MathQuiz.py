@@ -94,7 +94,7 @@ def displayMenu():
     # EASY BUTTON
     easyButton = Button(
         menuFrame,
-        text="Easy",
+        text="EASY",
         font=("Minecraft", 14),
         width=18,
         bg="#777777",
