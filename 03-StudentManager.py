@@ -20,13 +20,13 @@ searchFrame = Frame( root,bg="#263445")
 
 #  ==============STUDENT TABLE===========
 
-colulmns = ("Name", "Student Number", "Coursework", "Exam", "Percentage", "Grade")
+columns = ("Name", "Student Number", "Coursework", "Exam", "Percentage", "Grade")
 table = ttk.Treeview(
     resultsFrame,
-    columns=colulmns,
+    columns=columns,
     show="headings"
 )
-for col in colulmns:
+for col in columns:
     table.heading(col, text=col)   
 
 table.pack(fill="both", expand=True)
@@ -105,6 +105,17 @@ searchButton = Button(
     command = lambda: searchStudent()
 )
 searchButton.pack(pady=10)
+
+backButton = Button(
+    searchFrame,
+    text="Back To Menu",
+    font=("Roboto", 12),
+    command=lambda:(
+        searchFrame.pack_forget(),
+        menuFrame.pack(fill="both", expand=True)
+    )
+)
+backButton.pack(pady=10)
 # View All Records
 viewAllButton = Button(
     menuFrame,
@@ -122,7 +133,7 @@ viewAllButton.pack(pady=8)
 # view individual Student
 viewStudentButton = Button(
     menuFrame,
-    text = "View Individual Student",
+    text = "Search Student",
     font =("Roboto", 12),
     width = 30,
     command=lambda: (
@@ -137,7 +148,12 @@ highestOVRButton = Button(
     menuFrame,
     text = "Highest Overall Mark",
     font =("Roboto", 12),
-    width = 30
+    width = 30,
+    command = lambda: (
+        menuFrame.pack_forget(),
+        resultsFrame.pack(fill="both", expand=True),
+        highestStudent()
+    )
 )
 highestOVRButton.pack (pady = 8)
 
@@ -146,7 +162,12 @@ LowButton = Button(
     menuFrame,
     text= "Lowest Overall Mark",
     font=("Roboto", 12),
-    width= 30
+    width= 30,
+    command = lambda:(
+        menuFrame.pack_forget(),
+        resultsFrame.pack(fill="both", expand=True),
+        lowestStudent()
+    )
 )
 LowButton.pack(pady=8)
 
@@ -207,6 +228,9 @@ def updateClass():
     students = data["students"]
     total = 0
     
+    if len(students) == 0:
+        return 0,0
+    
     for student in students:
         coursework = (
             student["coursework1"] +
@@ -215,6 +239,7 @@ def updateClass():
         )
         percent = (coursework + student ["examMark"]) / 160 * 100
         total += percent
+    
     average = total / len(students)
     return len(students), average
 
@@ -241,14 +266,18 @@ def displayRecords():
             student["examMark"]
         )
 
-count, average = updateClass()
-studentCountLabel.config(text=f"Total Students: {count}")
-averageLabel.config(text=f"Class Average: {average:.1f}%")    
+        count, average = updateClass()
+        studentCountLabel.config(text=f"Total Students: {count}")
+        averageLabel.config(text=f"Class Average: {average:.1f}%")    
 
 # ======= SEARCH STUDENT ========
 
 def searchStudent():
+    searchResultLabel.config(text= "")
     search = searchEntry.get().strip().lower()
+    if search =="":
+        searchResultLabel.config(text="Please enter a student Or number")
+        return
     
     with open("Resources/studentMarks.json", "r") as file:
         
@@ -279,7 +308,69 @@ def searchStudent():
             )
             return
     searchResultLabel.config(text="Student not found")    
+    
+    
+def highestStudent():
+    with open("Resources/studentMarks.json", "r") as file:
+        data = json.load(file)
+        students = data["students"]
+        
+    highest = students[0]
+    for student in students:
+        coursework = (
+            student["coursework1"]+
+            student["coursework2"]+
+            student["coursework3"]
+         )
             
-            
+        total = coursework + student["examMark"]
+        if total > (
+            highest["coursework1"]+
+            highest["coursework2"]+
+            highest["coursework3"]+
+            highest["examMark"]
+        ):
+            highest = student
+    marks = [
+        highest["coursework1"],
+        highest["coursework2"],
+        highest["coursework3"]
+    ]  
+        
+    for row in table.get_children():
+        table.delete(row)
+        
+    addRow(highest["name"],highest["studentNumber"], marks, highest["examMark"])
 
+def lowestStudent():
+    with open("Resources/studentMarks.json", "r") as file:
+        data= json.load(file)
+    students = data ["students"]
+    lowest = students[0]
+    
+    for student in students:
+        coursework = (
+            student["coursework1"]+
+            student["coursework2"]+
+            student["coursework3"]
+        )
+        
+        total = coursework + student["examMark"]
+        if total < (
+            lowest ["coursework1"]+
+            lowest ["coursework2"]+
+            lowest ["coursework3"]+
+            lowest["examMark"]
+        ):
+            lowest = student
+    marks = [
+        lowest ["coursework1"],
+        lowest ["coursework2"],
+        lowest ["coursework3"]
+    ]    
+    
+    for row in table.get_children():
+        table.delete(row)
+    
+    addRow(lowest["name"], lowest["studentNumber"], marks, lowest["examMark"])
 root.mainloop()
