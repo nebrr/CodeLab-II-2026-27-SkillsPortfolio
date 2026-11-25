@@ -1,11 +1,34 @@
 from tkinter import *
 from random import randint
 from PIL import ImageTk, Image
+import pygame
+
+
+pygame.mixer.init()
+clickSound = pygame.mixer.Sound("Resources/Button.mp3")
+pygame.mixer.music.load("Resources/c418.mp3")
+pygame.mixer.music.play(-1)
+
+musicMuted = False
+def toggleMusic(muteButton):
+    global musicMuted
+    
+    if musicMuted == False:
+        pygame.mixer.music.pause()
+        musicMuted = True
+        muteButton.config(text="Unmute")       
+    else:
+        pygame.mixer.music.unpause()
+        musicMuted = False
+        muteButton.config(text="Mute")
 score = 0
 attempts = 0
 difficulty = ""
 questionNumber = 0
 question_finished = False
+
+def playSound():
+    clickSound.play()
 
 root= Tk()
 root.geometry("700x500")
@@ -14,8 +37,13 @@ root.title("Math Quiz")
 root.grid_columnconfigure(0, weight=1)
 root.grid_rowconfigure(0, weight=1)
 
+# Window Icon
+iconImage = Image.open("Resources/icon.jpg")
+iconPhoto = ImageTk.PhotoImage(iconImage)
+root.iconphoto(True, iconPhoto)
 
-# Frames Switching
+# FRAMES
+# Menu Frame
 menuFrame = Frame(root,)
 menuFrame.grid(row=0, column=0, sticky="nsew")
 menuFrame.grid_columnconfigure(0, weight=1)
@@ -56,12 +84,18 @@ menuCanvas.create_image(
 # Title Text
 menuCanvas.create_text(
     350, 80,
-    text="Math Quiz",
-    font=("Minecraft", 30),
+    text="MINECRAFT",
+    font=("Minecraft", 50),
     fill="white"
 )
 menuCanvas.create_text(
-    350, 155,
+    350, 115,
+    text="MATH QUIZ EDITION",
+    font=("Minecraft", 11),
+    fill="white"
+)
+menuCanvas.create_text(
+    350, 175,
     text="Select Difficulty",
     font=("Minecraft", 20),
     fill="white"
@@ -101,7 +135,7 @@ def displayMenu():
         fg="white",
         relief=RAISED,
         bd=5,
-        command=lambda: startQuiz("Easy")
+        command=lambda: [playSound(), startQuiz("Easy")]
     )
 
     menuCanvas.create_window(
@@ -119,7 +153,7 @@ def displayMenu():
         fg="white",
         relief=RAISED,
         bd=5,
-        command=lambda: startQuiz("Moderate")
+        command=lambda: [playSound(), startQuiz("Moderate")]
     )
 
     menuCanvas.create_window(
@@ -136,16 +170,31 @@ def displayMenu():
         bg="#777777",
         fg="white",
         bd=5,
-        command=lambda: startQuiz("Advanced")
+        command=lambda: [playSound(), startQuiz("Advanced")]
     )
-
     menuCanvas.create_window(
         350, 370,
         window=advancedButton
     )
+    
+    muteButton = Button(
+        menuFrame,
+        text="Unmute" if musicMuted else "Mute",
+        font=("Minecraft", 12),
+        bg="#777777",
+        fg="white",
+        relief=RAISED,
+        width = 7,
+        bd=5,
+        command=lambda: toggleMusic(muteButton)
+)
 
+    menuCanvas.create_window(
+        85,40,
+        window = muteButton
+)
 
-
+ 
 def startQuiz(selectedDifficulty):
     global difficulty, score, attempts, questionNumber
     
@@ -157,6 +206,12 @@ def startQuiz(selectedDifficulty):
     quizFrame.tkraise()
     displayProblem(difficulty)
 
+
+def goBack():
+    quizFrame.grid_remove()
+    menuFrame.tkraise()
+    
+    
 # Random Number Generator
 def randomInt(difficulty):
     if difficulty == "Easy":
@@ -185,9 +240,7 @@ def displayProblem(difficulty):
     for widget in quizFrame.winfo_children():
         if widget is not quizCanvas:
             widget.destroy()
-
     quizCanvas.delete("all")
-
     quizCanvas.create_image(
         0, 0,
         image=bgPhoto,
@@ -206,7 +259,9 @@ def displayProblem(difficulty):
     elif operation == "-":
         correctAnswer = number1 - number2
 
+
     # QUESTION COUNTER
+   
     quizCanvas.create_text(
         350, 70,
         text=f"QUESTION {questionNumber}/10",
@@ -214,6 +269,23 @@ def displayProblem(difficulty):
         fill="white"
     )
 
+    # BACK BUTTON
+    backButton = Button(
+        quizFrame,
+        text="Back",
+        font=("Minecraft", 12),
+        width=7,
+        bg="#777777",
+        fg="white",
+        relief=RAISED,
+        bd=5,
+        command=lambda: [playSound(), goBack()]
+    )
+    
+    quizCanvas.create_window(
+        85, 40,
+        window=backButton
+    )
     # MATH QUESTION
     quizCanvas.create_text(
         350, 145,
@@ -262,12 +334,12 @@ def displayProblem(difficulty):
         fg="white",
         relief=RAISED,
         bd=5,
-        command=lambda: submit_answer(
+        command=lambda:[playSound(),submit_answer(
             answerEntry,
             correctAnswer,
             resultText,
             scoreText
-        )
+        )]
     )
 
     quizCanvas.create_window(
@@ -393,7 +465,7 @@ def displayResults():
         fg="white",
         relief=RAISED,
         bd=5,
-        command=playAgain
+        command= lambda: [playSound(), playAgain()]
     )
 
     resultsCanvas.create_window(
@@ -411,7 +483,7 @@ def displayResults():
         fg="white",
         relief=RAISED,
         bd=5,
-        command=root.destroy
+        command=lambda:[playSound(), root.destroy()]
     )
 
     resultsCanvas.create_window(
