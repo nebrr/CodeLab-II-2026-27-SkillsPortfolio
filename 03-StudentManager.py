@@ -105,6 +105,7 @@ searchButton = Button(
     command = lambda: searchStudent()
 )
 searchButton.pack(pady=10)
+searchEntry.bind("<Return>", lambda event: searchStudent())
 
 backButton = Button(
     searchFrame,
@@ -116,6 +117,15 @@ backButton = Button(
     )
 )
 backButton.pack(pady=10)
+
+
+clearSearchButton = Button(
+    searchFrame,
+    text="Clear Search",
+    font=("Roboto", 12),
+    command = lambda: clearSearch()
+)
+clearSearchButton.pack(pady=10)
 # View All Records
 viewAllButton = Button(
     menuFrame,
@@ -307,7 +317,11 @@ def searchStudent():
                 )
             )
             return
-    searchResultLabel.config(text="Student not found")    
+    searchResultLabel.config(text="Student not found")  
+    
+def clearSearch():
+    searchEntry.delete(0, END)
+    searchResultLabel.config(text="")  
     
     
 def highestStudent():
